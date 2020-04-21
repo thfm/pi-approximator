@@ -9,6 +9,9 @@ fn main() -> anyhow::Result<()> {
     let mut stdout = std::io::stdout();
     crossterm::execute!(stdout, terminal::Clear(terminal::ClearType::All))?;
 
+    let mut best_approximation = 0.0;
+    let mut lowest_difference = PI;
+
     loop {
         let mut rng = rand::thread_rng();
 
@@ -24,12 +27,17 @@ fn main() -> anyhow::Result<()> {
         total_tally += 1;
 
         let approximation = 4.0 * (inside_tally as f64 / total_tally as f64);
+        let difference = (PI - approximation).abs();
+
+        if difference < lowest_difference {
+            best_approximation = approximation;
+            lowest_difference = difference;
+        }
 
         crossterm::execute!(stdout, cursor::MoveTo(0, 0))?;
         print!(
             "π ≈ {:.10} (difference = {:.10})",
-            approximation,
-            (PI - approximation).abs()
+            best_approximation, lowest_difference
         );
     }
 }
