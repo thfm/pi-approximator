@@ -3,8 +3,6 @@ use rand::Rng;
 use std::{f64::consts::PI, io::Write};
 
 fn main() -> anyhow::Result<()> {
-    let c = Circle { radius: 1.0 };
-
     let mut total_tally = 0;
     let mut inside_tally = 0;
 
@@ -26,12 +24,12 @@ fn main() -> anyhow::Result<()> {
         total_tally += 1;
 
         let approximation = 4.0 * (inside_tally as f64 / total_tally as f64);
-        let percent_diff = (PI - approximation).abs() / ((PI + approximation) / 2.0);
 
         crossterm::execute!(stdout, cursor::MoveTo(0, 0))?;
         print!(
-            "π ≈ {:.10} ({:.10}% difference)",
-            approximation, percent_diff
+            "π ≈ {:.10} (difference = {:.10})",
+            approximation,
+            (PI - approximation).abs()
         );
     }
 }
@@ -44,5 +42,5 @@ struct Point {
 impl Point {
     fn in_unit_circle(&self) -> bool {
         self.x.powi(2) + self.y.powi(2) < 1.0
-}
+    }
 }
