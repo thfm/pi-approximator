@@ -15,11 +15,11 @@ fn main() -> anyhow::Result<()> {
         let mut rng = rand::thread_rng();
 
         let p = Point {
-            x: rng.gen_range(-c.radius, c.radius),
-            y: rng.gen_range(-c.radius, c.radius),
+            x: rng.gen_range(-1.0, 1.0),
+            y: rng.gen_range(-1.0, 1.0),
         };
 
-        if p.is_inside(c) {
+        if p.in_unit_circle() {
             inside_tally += 1
         }
 
@@ -42,15 +42,7 @@ struct Point {
 }
 
 impl Point {
-    fn is_inside(&self, c: Circle) -> bool {
-        let dist_to_centre = self.x.powi(2) + self.y.powi(2);
-        let dist_to_centre = dist_to_centre.sqrt();
-
-        dist_to_centre < c.radius
-    }
+    fn in_unit_circle(&self) -> bool {
+        self.x.powi(2) + self.y.powi(2) < 1.0
 }
-
-#[derive(Clone, Copy)]
-struct Circle {
-    radius: f64,
 }
